@@ -1,4 +1,4 @@
-class Lima < Formula
+class LimaAT0Mainnika < Formula
   desc "Linux virtual machines"
   homepage "https://github.com/lima-vm/lima"
   url "https://codeload.github.com/mainnika/lima/zip/refs/heads/mainnika/v0.19.1"
@@ -7,6 +7,7 @@ class Lima < Formula
   head "https://github.com/mainnika/lima.git", branch: "mainnika/v0.19.1"
 
   depends_on "go" => :build
+  depends_on xcode: ["13", :build]
 
   def install
     if build.head?
