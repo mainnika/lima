@@ -204,12 +204,19 @@ func createVM(driver *driver.BaseDriver) (*vz.VirtualMachine, error) {
 }
 
 func createInitialConfig(driver *driver.BaseDriver) (*vz.VirtualMachineConfiguration, error) {
-	efiVariableStore, err := getEFI(driver)
-	if err != nil {
-		return nil, err
+	if driver.Yaml.Kernel == nil {
+		return nil, fmt.Errorf("kernel is required for VZ driver")
 	}
 
-	bootLoader, err := vz.NewEFIBootLoader(vz.WithEFIVariableStore(efiVariableStore))
+	var linuxBootLoaderOpts []vz.LinuxBootLoaderOption
+	if driver.Yaml.Initrd != nil {
+		linuxBootLoaderOpts = append(linuxBootLoaderOpts, vz.WithInitrd(*driver.Yaml.Initrd))
+	}
+	if driver.Yaml.Cmdline != nil {
+		linuxBootLoaderOpts = append(linuxBootLoaderOpts, vz.WithCommandLine(*driver.Yaml.Cmdline))
+	}
+
+	bootLoader, err := vz.NewLinuxBootLoader(*driver.Yaml.Kernel, linuxBootLoaderOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -680,14 +687,6 @@ func getMachineIdentifier(driver *driver.BaseDriver) (*vz.GenericMachineIdentifi
 		return machineIdentifier, nil
 	}
 	return vz.NewGenericMachineIdentifierWithDataPath(identifier)
-}
-
-func getEFI(driver *driver.BaseDriver) (*vz.EFIVariableStore, error) {
-	efi := filepath.Join(driver.Instance.Dir, filenames.VzEfi)
-	if _, err := os.Stat(efi); os.IsNotExist(err) {
-		return vz.NewEFIVariableStore(efi, vz.WithCreatingEFIVariableStore())
-	}
-	return vz.NewEFIVariableStore(efi)
 }
 
 func createSockPair() (server, client *os.File, _ error) {

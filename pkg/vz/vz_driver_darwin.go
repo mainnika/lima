@@ -50,6 +50,9 @@ var knownYamlProperties = []string{
 	"SSH",
 	"Video",
 	"VMType",
+	"Kernel",
+	"Initrd",
+	"Cmdline",
 }
 
 const Enabled = true

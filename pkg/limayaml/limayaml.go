@@ -39,6 +39,9 @@ type LimaYAML struct {
 	CACertificates    CACertificates `yaml:"caCerts,omitempty" json:"caCerts,omitempty"`
 	Rosetta           Rosetta        `yaml:"rosetta,omitempty" json:"rosetta,omitempty"`
 	Plain             *bool          `yaml:"plain,omitempty" json:"plain,omitempty"`
+	Kernel            *string        `yaml:"kernel,omitempty" json:"kernel,omitempty"`
+	Initrd            *string        `yaml:"initrd,omitempty" json:"initrd,omitempty"`
+	Cmdline           *string        `yaml:"cmdline,omitempty" json:"cmdline,omitempty"`
 }
 
 type (
