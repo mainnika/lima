@@ -238,12 +238,7 @@ func createInitialConfig(driver *driver.BaseDriver) (*vz.VirtualMachineConfigura
 }
 
 func attachPlatformConfig(driver *driver.BaseDriver, vmConfig *vz.VirtualMachineConfiguration) error {
-	machineIdentifier, err := getMachineIdentifier(driver)
-	if err != nil {
-		return err
-	}
-
-	platformConfig, err := vz.NewGenericPlatformConfiguration(vz.WithGenericMachineIdentifier(machineIdentifier))
+	platformConfig, err := vz.NewGenericPlatformConfiguration()
 	if err != nil {
 		return err
 	}
@@ -671,22 +666,6 @@ func attachOtherDevices(_ *driver.BaseDriver, vmConfig *vz.VirtualMachineConfigu
 		keyboardDeviceConfig,
 	})
 	return nil
-}
-
-func getMachineIdentifier(driver *driver.BaseDriver) (*vz.GenericMachineIdentifier, error) {
-	identifier := filepath.Join(driver.Instance.Dir, filenames.VzIdentifier)
-	if _, err := os.Stat(identifier); os.IsNotExist(err) {
-		machineIdentifier, err := vz.NewGenericMachineIdentifier()
-		if err != nil {
-			return nil, err
-		}
-		err = os.WriteFile(identifier, machineIdentifier.DataRepresentation(), 0o666)
-		if err != nil {
-			return nil, err
-		}
-		return machineIdentifier, nil
-	}
-	return vz.NewGenericMachineIdentifierWithDataPath(identifier)
 }
 
 func createSockPair() (server, client *os.File, _ error) {
