@@ -80,20 +80,24 @@ func Prepare(ctx context.Context, inst *store.Instance) (*Prepared, error) {
 		return nil, err
 	}
 
+	logrus.Infof("Preparing the instance %q with VM driver %q", inst.Name, inst.VMType)
 	limaDriver := driverutil.CreateTargetDriverInstance(&driver.BaseDriver{
 		Instance: inst,
 		Yaml:     y,
 	})
 
+	logrus.Infof("Validating the instance %q", inst.Name)
 	if err := limaDriver.Validate(); err != nil {
 		return nil, err
 	}
 
+	logrus.Infof("Initializing the instance %q", inst.Name)
 	if err := limaDriver.Initialize(ctx); err != nil {
 		return nil, err
 	}
 
 	// Check if the instance has been created (the base disk already exists)
+	logrus.Infof("Checking if the instance %q has been created", inst.Name)
 	created := false
 	baseDisk := filepath.Join(inst.Dir, filenames.BaseDisk)
 	if _, err := os.Stat(baseDisk); err == nil {
