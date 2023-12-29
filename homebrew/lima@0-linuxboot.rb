@@ -1,12 +1,14 @@
-class LimaAT0Mainnika < Formula
+class LimaAT0Linuxboot < Formula
   desc "Linux virtual machines"
   homepage "https://github.com/lima-vm/lima"
-  url "https://codeload.github.com/mainnika/lima/zip/refs/heads/mainnika/v0.19.1"
+  url "https://codeload.github.com/mainnika/lima-linuxboot/zip/refs/heads/mainnika/v0.19.1"
   sha256 ""
   license "Apache-2.0"
-  head "https://github.com/mainnika/lima.git", branch: "mainnika/v0.19.1"
+  head "https://github.com/mainnika/lima-linuxboot.git", branch: "mainnika/v0.19.1"
 
   depends_on "go" => :build
+  # strict dependency on sdk-13 allows brew pass HOMEBREW_SDKROOT as MacOSX13.sdk
+  # this is required for lima to build vz driver on macOS Monterey
   depends_on xcode: ["13", :build]
 
   def install
